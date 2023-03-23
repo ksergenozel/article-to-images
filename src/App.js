@@ -68,56 +68,31 @@ export default function App() {
 
   const generate = async () => {
     if (article) {
-      const keywords = await rake(article, { language: language.name.toLowerCase() })
+      const keywords = await rake(article.toLowerCase(), { language: language.name.toLowerCase() })
       if (keywords) {
         const bestKeywords = keywords.filter((_, index) => index < 10)
-        const firstSection = [bestKeywords[0], bestKeywords[1], bestKeywords[2], bestKeywords[3], bestKeywords[4]]
-        const secondSection = [bestKeywords[5], bestKeywords[6], bestKeywords[7], bestKeywords[8], bestKeywords[9]]
+        console.log(bestKeywords);
         let images = []
-        const imagesFromFirstSection = []
-        const imagesFromSecondSection = []
-        await Promise.all(firstSection.map(async (keyword) => {
+        await Promise.all(bestKeywords.map(async (keyword) => {
           await axios.get("https://api.unsplash.com/search/photos", {
             headers: {
               Authorization: `Client-ID ${process.env.REACT_APP_UNSPLASH_API_KEY}`
             },
             params: {
               query: keyword,
-              per_page: 3,
+              per_page: bestKeywords.length < 5 ? 5 : 3,
               content_filter: "high",
             }
           }).then((response) => {
-            response.data.results.map((result) => imagesFromFirstSection.push(result))
+            response.data.results.map((result) => images.push(result))
           }).catch((error) => {
             if (error) {
               console.clear()
             }
           })
         }))
-        await Promise.all(secondSection.map(async (keyword) => {
-          await axios.get("https://api.unsplash.com/search/photos", {
-            headers: {
-              Authorization: `Client-ID ${process.env.REACT_APP_UNSPLASH_API_KEY}`
-            },
-            params: {
-              query: keyword,
-              per_page: 2,
-              content_filter: "high",
-            }
-          }).then((response) => {
-            response.data.results.map((result) => imagesFromSecondSection.push(result))
-          }).catch((error) => {
-            if (error) {
-              console.clear()
-            }
-          })
-        }))
-        if (imagesFromFirstSection.length && imagesFromSecondSection.length) {
-          images = [...imagesFromFirstSection, ...imagesFromSecondSection]
-          images = images.filter((v, i, a) => a.findIndex(v2 => (v2.id === v.id)) === i)
-        }
         if (images.length) {
-          setImages(images)
+          setImages(images.reverse())
           setStage(2)
         } else {
           setError(true)
