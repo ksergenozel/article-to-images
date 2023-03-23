@@ -70,26 +70,23 @@ export default function App() {
         const bestKeywords = keywords.filter((_, index) => index < 10)
         const images = []
         await Promise.all(bestKeywords.map(async (keyword) => {
-          try {
-            await axios.get("https://api.unsplash.com/search/photos", {
-              headers: {
-                Authorization: `Client-ID ${process.env.REACT_APP_UNSPLASH_API_KEY}`
-              },
-              params: {
-                query: keyword,
-                per_page: 2,
-                content_filter: "high",
-              }
-            }).then((response) => {
-              response.data.results.map((result) => images.push(result))
-            }).catch(() => {
-              setImages()
-              setError(true)
-              setArticle("")
-            })
-          } catch (error) {
+          await axios.get("https://api.unsplash.com/search/photos", {
+            headers: {
+              Authorization: `Client-ID ${process.env.REACT_APP_UNSPLASH_API_KEY}`
+            },
+            params: {
+              query: keyword,
+              per_page: 2,
+              content_filter: "high",
+            }
+          }).then((response) => {
+            response.data.results.map((result) => images.push(result))
+          }).catch((error) => {
             console.log("ERROR:", error);
-          }
+            setImages()
+            setError(true)
+            setArticle("")
+          })
         }))
         if (images.length) {
           setImages(images)
