@@ -117,7 +117,6 @@ export default function App() {
           images = images.filter((v, i, a) => a.findIndex(v2 => (v2.id === v.id)) === i)
         }
         if (images.length) {
-          images.map((image) => console.log(image))
           setImages(images)
           setStage(2)
         } else {
