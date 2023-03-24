@@ -100,7 +100,6 @@ export default function App() {
         }
       } else {
         setError(true)
-        setMessage("Something went wrong. Please try again.")
         setArticle("")
       }
     } else {
