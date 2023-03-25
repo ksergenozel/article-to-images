@@ -71,32 +71,36 @@ export default function App() {
       const keywords = await rake(article.toLowerCase(), { language: language.name.toLowerCase() })
       if (keywords) {
         const bestKeywords = keywords.filter((_, index) => index < 10)
-        console.log(bestKeywords);
-        let images = []
-        await Promise.all(bestKeywords.map(async (keyword) => {
-          await axios.get("https://api.unsplash.com/search/photos", {
-            headers: {
-              Authorization: `Client-ID ${process.env.REACT_APP_UNSPLASH_API_KEY}`
-            },
-            params: {
-              query: keyword,
-              per_page: bestKeywords.length < 5 ? 5 : 3,
-              content_filter: "high",
-            }
-          }).then((response) => {
-            response.data.results.map((result) => images.push(result))
-          }).catch((error) => {
-            if (error) {
-              console.clear()
-            }
-          })
-        }))
-        if (images.length) {
-          setImages(images.reverse())
-          setStage(2)
+        if (bestKeywords.length) {
+          let images = []
+          await Promise.all(bestKeywords.map(async (keyword) => {
+            await axios.get("https://api.unsplash.com/search/photos", {
+              headers: {
+                Authorization: `Client-ID ${process.env.REACT_APP_UNSPLASH_API_KEY}`
+              },
+              params: {
+                query: keyword,
+                per_page: bestKeywords.length < 5 ? 5 : 3,
+                content_filter: "high",
+              }
+            }).then((response) => {
+              response.data.results.map((result) => images.push(result))
+            }).catch((error) => {
+              if (error) {
+                console.clear()
+              }
+            })
+          }))
+          if (images.length) {
+            setImages(images.reverse())
+            setStage(2)
+          } else {
+            setError(true)
+            setMessage("Something went wrong. Please try again.")
+          }
         } else {
           setError(true)
-          setMessage("Something went wrong. Please try again.")
+          setArticle("")
         }
       } else {
         setError(true)
