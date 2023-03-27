@@ -165,11 +165,11 @@ export default function App() {
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", }}>
             <span style={{ display: "flex", flexDirection: "row", fontSize: 14, marginTop: 4 }}>
               <p>Photo by&nbsp;</p>
-              <a style={{ color: "#000" }} target="_blank" href={`https://www.unsplash.com/@${images[activeIndex].user.username}`}>
+              <a style={{ color: "#000" }} target="_blank" href={`https://www.unsplash.com/@${images[activeIndex].user.username}?utm_source=article_to_images&utm_medium=referral`}>
                 {images[activeIndex].user.name}
               </a>
               <p>&nbsp;on&nbsp;</p>
-              <a style={{ color: "#000" }} target="_blank" href='https://unsplash.com/'>Unsplash</a>
+              <a style={{ color: "#000" }} target="_blank" href='https://unsplash.com/?utm_source=article_to_images&utm_medium=referral'>Unsplash</a>
             </span>
             <span>
               <Button size={device == "mobile" && "small"} text onClick={reset} style={{ paddingLeft: 24, paddingRight: 24, marginRight: 12 }} label="Back" />
