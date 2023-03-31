@@ -107,7 +107,7 @@ export default function App() {
             })
           }))
           if (images.length) {
-            setImages(images.reverse())
+            setImages(images)
             setStage(2)
           } else {
             setError(true)
